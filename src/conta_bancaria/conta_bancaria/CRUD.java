@@ -1,4 +1,4 @@
-package futebol;
+package conta_bancaria;
 
 
 import java.io.RandomAccessFile;
@@ -9,11 +9,11 @@ import java.lang.reflect.Constructor;
 import java.util.List;
 import java.util.ArrayList;
 
-public class CRUD<futebol extends Registro> {
+public class CRUD<conta_bancaria extends Registro> {
     private RandomAccessFile arq;
-    private Constructor<futebol> construtor;
+    private Constructor<conta_bancaria> construtor;
 
-    public CRUD(Constructor<futebol> construtor, String file) throws FileNotFoundException, IOException{
+    public CRUD(Constructor<conta_bancaria> construtor, String file) throws FileNotFoundException, IOException{
         this.construtor = construtor;
 
         // Abrir arquivo e realizar primeiro preenchimento
@@ -22,7 +22,7 @@ public class CRUD<futebol extends Registro> {
             arq.writeInt(0); // Insere o id inicial
     }
 
-    public int create(futebol objeto) throws IOException {
+    public int create(conta_bancaria objeto) throws IOException {
         arq.seek(0);
         
         // Gerar novo ID
@@ -53,13 +53,13 @@ public class CRUD<futebol extends Registro> {
         return objID;
     }
 
-    public futebol read(int ID) throws IOException, InstantiationException, IllegalAccessException, InvocationTargetException {
+   public conta_bancaria read(int id) throws IOException, InstantiationException, IllegalAccessException, InvocationTargetException {
         // Pular "maxID"
         arq.seek(4);
-        futebol objeto = null;
+        conta_bancaria objeto = null;
 
         boolean achou = false;
-        byte[] ba;
+        byte[]  ba;
         while(!achou && (int)arq.getFilePointer() != arq.length()) {
             byte lapide = arq.readByte();
             short tamanhoReg = arq.readShort();
@@ -69,7 +69,7 @@ public class CRUD<futebol extends Registro> {
             if(lapide != 1) {
                 objeto = construtor.newInstance();
                 objeto.fromByteArray(ba);
-                if(objeto.getID() == ID) {
+                if(objeto.getID() == id) {
                     achou = true;
                 }
             }
@@ -79,9 +79,9 @@ public class CRUD<futebol extends Registro> {
         return achou ? objeto : null;
     }
 
-    public List<futebol> read() throws IOException, InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException {
-        List<futebol> objetos = new ArrayList<futebol>(); 
-        futebol objeto;
+    public List<conta_bancaria> read() throws IOException, InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException {
+        List<conta_bancaria> objetos = new ArrayList<conta_bancaria>(); 
+    conta_bancaria objeto;
         // Pular "maxID"
         arq.seek(4);
 
@@ -103,7 +103,7 @@ public class CRUD<futebol extends Registro> {
     }
 
     public boolean delete(int ID) throws IOException, InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException{
-        futebol objeto;
+        conta_bancaria objeto;
         
         // Pular "maxID"
         arq.seek(4);
@@ -133,8 +133,8 @@ public class CRUD<futebol extends Registro> {
         return success;
     }
 
-    public boolean update(futebol objeto) throws IOException, InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException{
-        futebol tempObjeto;
+    public boolean update(conta_bancaria objeto) throws IOException, InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException{
+        conta_bancaria tempObjeto;
         arq.seek(4); // Pular o "maxID"
         
         boolean success = false;
@@ -191,5 +191,9 @@ public class CRUD<futebol extends Registro> {
         }
 
         return success;
+    }
+
+    public conta_bancaria read(String iD1) {
+        return null;
     }
 }
